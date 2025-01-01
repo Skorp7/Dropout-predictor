@@ -1,0 +1,7 @@
+colorama
+numpy
+optuna
+pyfiglet
+pandas
+sklearn
+xgboost
