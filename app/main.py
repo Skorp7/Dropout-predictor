@@ -1,9 +1,12 @@
 import numpy as np
+import warnings
 from Glossary import Glossary
 from SampleTrainer import SampleTrainer
 from TerminalPrinter import TerminalPrinter
 from Trainer import Trainer
 from Validator import Validator
+
+warnings.filterwarnings('ignore')
 
 def get_lang():
     # Ask for language
