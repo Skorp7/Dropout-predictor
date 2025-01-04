@@ -9,9 +9,13 @@
     "exit": "Poistu",
     "greeting": "Hei maailma",
     "higher_required": "Uudempi versio vaaditaan.",
+    "hyperparameters": "Hyperparametrit",
     "interrupt_by": "Keskeytä painamalla",
     "invalid_input": "Virheellinen syöte. Yritä uudelleen.",
     "minimum": "Vähintään",
+    "model_details": "Malli on koulutettu näillä tiedoilla ja hyperparametreilla",
+    "model_found": "Koulutettu malli löytyi.",
+    "no_model": "Mallia ei löytynyt. Kouluta malli ensin.",
     "not_found": "Ei löytynyt",
     "not_implemented": "Toimintoa ei ole vielä toteutettu.",
     "others": "Muut",
@@ -30,6 +34,7 @@
     "training_results": "Koulutustulokset ja malliin käytetyt hyperparametrit",
     "validating": "Tarkistetaan ympäristöä",
     "validate_env": "Testaa onko ohjelman ympäristö kunnossa (tarvittavat kirjastot asennettuna)",
+    "model_approval": "Haluatko käyttää tätä mallia? (y/n)",
     "what_to_do": "Mitä haluat tehdä?",
     "with_sample_data": "esimerkkiaineistolla (6 opiskelijaa)"
 }

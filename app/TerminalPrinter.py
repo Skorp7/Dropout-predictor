@@ -29,6 +29,41 @@ class TerminalPrinter:
         self.yellow(self.glossary.get('saved') + ': ' + message)
         self.empty_line()
 
+    """
+    Print details of previously trained model.
+    Requires a dictionary with the following keys
+    - data_start_year
+    - data_end_year
+    - include_enrolls
+    - prediction_epoch
+    - beta_value
+    - hyperparameters
+    """
+    def model_details(self, model_details: dict):
+        self.yellow(self.glossary.get('model_details') + ':')
+
+        # Start and end years
+        self.yellow('"' + self.glossary.get('data_start_year') + '": ')
+        self.print('> ' + str(model_details.get('data_start_year')))
+        self.yellow('"' + self.glossary.get('data_end_year') + '": ')
+        self.print('> ' + str(model_details.get('data_end_year')))
+
+        # Include enrollments?
+        self.yellow('"' + self.glossary.get('enroll_data') + '": ')
+        self.print('> ' + str(model_details.get('include_enrolls')))
+
+        # Prediction epoch
+        self.yellow('"' + self.glossary.get('prediction_epoch') + '": ')
+        self.print('> ' + str(model_details.get('prediction_epoch')))
+
+        # Beta value
+        self.yellow('"' + self.glossary.get('beta_value') + '": ')
+        self.print('> ' + str(model_details.get('beta_value')))
+
+        # Hyperparameters
+        self.yellow(self.glossary.get('hyperparameters') + ':')
+        self.print('> ' + str(model_details.get('hyperparameters')))
+
     def what_to_do(self):
         self.yellow(self.glossary.get('what_to_do'))
         self.empty_line()

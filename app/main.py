@@ -1,6 +1,7 @@
 import numpy as np
 import warnings
 from Glossary import Glossary
+from Predictor import Predictor
 from SampleTrainer import SampleTrainer
 from TerminalPrinter import TerminalPrinter
 from Trainer import Trainer
@@ -63,7 +64,15 @@ def ask_for_action(printer: TerminalPrinter, glossary: Glossary):
                 printer.error(glossary.get('not_implemented'))
             elif train_or_predict == 'p':
                 printer.empty_line()
-                printer.error(glossary.get('not_implemented'))
+                approved = ask_for_model_approval(printer, glossary)
+                if (approved):
+                    printer.empty_line()
+                    printer.print(glossary.get('predicting') + '...')
+                    predictor = Predictor(glossary)
+                    messages = predictor.predict()
+                    printer.print(messages)
+                else:
+                    what_to_do(printer, glossary)
             elif train_or_predict == 'v':
                 printer.empty_line()
                 validator = Validator(glossary)
@@ -173,6 +182,28 @@ def ask_for_enroll_data(data_start_year, printer: TerminalPrinter, glossary: Glo
                 return False
             else:
                 raise ValueError
+        except ValueError:
+            printer.error(glossary.get('invalid_input'))
+
+def ask_for_model_approval(printer: TerminalPrinter, glossary: Glossary):
+    while True:
+        try:
+            if (Predictor.model_exists()):
+                printer.yellow(glossary.get('model_found'))
+                printer.model_details(Predictor.get_model_details())
+                printer.yellow(glossary.get('model_approval'))
+                model_approval = input('> ').lower()
+                check_for_quitting(model_approval, printer)
+                if (model_approval == 'y'):
+                    return True
+                elif (model_approval == 'n'):
+                    return False
+                else:
+                    raise ValueError
+            else:
+                printer.yellow(glossary.get('no_model'))
+                # Ask again what to do
+                what_to_do(printer, glossary)
         except ValueError:
             printer.error(glossary.get('invalid_input'))
 

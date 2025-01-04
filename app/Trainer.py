@@ -92,6 +92,9 @@ class Trainer:
         model = xgb.XGBClassifier(**best_params)
         model.fit(data, target)
 
+        # Save the model
+        self.save_model(model)
+
         # Show training results
         training_results                    = self.get_training_metrics(model, data, target)
         training_results['hyperparameters'] = best_params

@@ -9,9 +9,13 @@
     "exit": "Exit",
     "greeting": "Hello world",
     "higher_required": "Higher version is required.",
+    "hyperparameters": "Hyperparameters",
     "interrupt_by": "Interrupt by pressing",
     "invalid_input": "Invalid input. Please try again.",
     "minimum": "Minimum",
+    "model_details": "Model has been trained with these details and hyperparameters",
+    "model_found": "Pre-trained model exists.",
+    "no_model": "No model found. Train the model first.",
     "not_found": "Not found",
     "not_implemented": "Functionality is not yet implemented.",
     "others": "Others",
@@ -30,6 +34,7 @@
     "training_results": "Training results and hyperparameters used in the model",
     "validating": "Validating",
     "validate_env": "Validate the program environment (dependencies installed)",
+    "model_approval": "Do you want to use this model? (y/n)",
     "what_to_do": "What would you like to do?",
     "with_sample_data": "with sample data (6 students)"
 }
