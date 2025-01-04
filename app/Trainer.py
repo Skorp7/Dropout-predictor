@@ -5,7 +5,7 @@ class Trainer:
 
     DEFAULT_BETA_VALUE       = 1.6 # Beta value to be used in F-score to optimise hyperparameters (1.6 favours recall over precision)
     DEFAULT_ENROLLS_INCLUDED = False # Whether to include enrollments data in the training.
-    DEFAULT_PREDICTION_EPOCH = 2.0 # For how many years students have studied before predicting
+    DEFAULT_PREDICTION_EPOCH = 1.5 # For how many years students have studied before predicting
 
     def __init__(self, data_start_year: int, data_end_year: int, include_enrolls: bool, prediction_epoch: float, beta_value: float, glossary: Glossary):
         self.data_start_year  = data_start_year
