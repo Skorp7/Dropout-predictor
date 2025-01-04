@@ -52,7 +52,12 @@ def ask_for_action(printer: TerminalPrinter, glossary: Glossary):
                     messages = trainer.parse_data()
                     printer.print(messages)
                     messages = trainer.train()
-                    printer.print(messages)
+                    printer.empty_line()
+                    printer.yellow(glossary.get('training_results') + ':')
+                    # print message dict nicely
+                    for key, value in messages.items():
+                        printer.print(f'{key}: {value}')
+                    printer.empty_line()
                 except Exception as e:
                     printer.error(str(e))
                 printer.error(glossary.get('not_implemented'))

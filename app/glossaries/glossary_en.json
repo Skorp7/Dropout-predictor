@@ -27,6 +27,7 @@
     "training": "training",
     "training_in_progress": "Training in progress",
     "training_instructions": "Before starting the training, please make sure that you have the necessary data files in the data_in/ folder. Read the README.md file for more information.",
+    "training_results": "Training results and hyperparameters used in the model",
     "validating": "Validating",
     "validate_env": "Validate the program environment (dependencies installed)",
     "what_to_do": "What would you like to do?",

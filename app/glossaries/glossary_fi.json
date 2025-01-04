@@ -27,6 +27,7 @@
     "training": "kouluttamista",
     "training_in_progress": "Koulutus käynnissä",
     "training_instructions": "Ennen koulutuksen aloittamista varmista, että tarvittavat aineistotiedostot ovat data_in/ -kansiossa. Lue lisää README.md -tiedostosta.",
+    "training_results": "Koulutustulokset ja malliin käytetyt hyperparametrit",
     "validating": "Tarkistetaan ympäristöä",
     "validate_env": "Testaa onko ohjelman ympäristö kunnossa (tarvittavat kirjastot asennettuna)",
     "what_to_do": "Mitä haluat tehdä?",
