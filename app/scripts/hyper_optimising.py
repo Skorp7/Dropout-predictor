@@ -1,4 +1,5 @@
 import optuna
+from optuna.logging import set_verbosity, WARNING
 import xgboost as xgb
 import pandas as pd
 from sklearn.model_selection import cross_val_score, StratifiedKFold
@@ -47,6 +48,9 @@ def find_best_params(data: pd.DataFrame, target: pd.DataFrame, b: float, fixed_p
     y            = target
     beta         = b
     fixed_params = fixed_params_dict
+
+    # Set verbosity to WARNING to avoid too much output
+    set_verbosity(WARNING)
 
     # Create the study and optimize the objective function
     study = optuna.create_study(direction='maximize')
