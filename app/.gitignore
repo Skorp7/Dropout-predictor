@@ -1,2 +1,5 @@
 __pycache__/
 .env
+data_in/
+data_processed/
+models/
