@@ -57,3 +57,5 @@ Aja terminaalissa:
 conda activate dropout-env
 python3 main.py
 ```
+
+![Käyttöliittymä](pictures/ui.png)
