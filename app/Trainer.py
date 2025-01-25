@@ -28,6 +28,7 @@ class Trainer:
             self.data_start_year,
             self.data_end_year,
             self.include_enrolls,
+            False, # This not data for prediction, but for training.
             self.prediction_epoch,
             file_prefix,
         )

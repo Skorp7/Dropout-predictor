@@ -15,7 +15,7 @@ import scripts.data_utils as data_utils
 # include_enrolls - Include enrollments to the data
 
 semester_max = 17 # approx 8 years of studies
-def parse_students(years, include_enrolls, file_prefix = None):
+def parse_students(years: list, include_enrolls: bool, data_for_prediction: bool, file_prefix: str = None):
     path = 'data_in/'
     if (file_prefix is not None):
         path = path + file_prefix
@@ -252,10 +252,18 @@ def parse_students(years, include_enrolls, file_prefix = None):
         if (include_enrolls):
             df_courses_with_enrollments = pd.merge(df_courses_with_enrollments, df_students_periodial[['6_consecutive_zeros', 'opisknro']], on='opisknro', how='left')
 
-        # Remove columns opisknro,opinto-oik_alku,opinto-oik_loppu,aloituspvm,valmistunut,lukukausi-ilmot,syntynyt,sukupuoli,aloitus_periodi,aloitus_vuosi,opinto-oik_loppu_datetime,valmistumisperiodi,
-        df_students_periodial = df_students_periodial.drop(columns=['opisknro', 'opinto-oik_alku', 'opinto-oik_loppu', 'aloituspvm', 'valmistunut', 'lukukausi-ilmot', 'aloitus_periodi', 'aloitus_vuosi', 'opinto-oik_loppu_datetime', 'valmistumisperiodi'])
         # Rename "6_consecutive_zeros" to "dropout"
         df_students_periodial = df_students_periodial.rename(columns={'6_consecutive_zeros': 'dropout'})
+
+        # DROP COLUMNS THAT ARE NOT NEEDED FOR TRAINING
+        columns_to_drop = ['opinto-oik_alku', 'opinto-oik_loppu', 'aloituspvm', 'valmistunut', 'lukukausi-ilmot', 'aloitus_periodi', 'aloitus_vuosi', 'opinto-oik_loppu_datetime', 'valmistumisperiodi']
+        if (data_for_prediction):
+            columns_to_drop.append('dropout')
+        else:
+            columns_to_drop.append('opisknro')
+
+        # Remove columns opisknro,opinto-oik_alku,opinto-oik_loppu,aloituspvm,valmistunut,lukukausi-ilmot,sukupuoli,aloitus_periodi,aloitus_vuosi,opinto-oik_loppu_datetime,valmistumisperiodi,
+        df_students_periodial = df_students_periodial.drop(columns=columns_to_drop)
 
         #save df to csv file
         output_path = 'data_processed/'

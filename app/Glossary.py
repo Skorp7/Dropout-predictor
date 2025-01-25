@@ -27,7 +27,7 @@ class Glossary:
 
         file.close()
 
-    def get(self, word_identifier):
+    def get(self, word_identifier, lower = False):
         """
         Get the glossary from json file.
         """
@@ -38,5 +38,8 @@ class Glossary:
         # Check if the word exists
         if self.glossary and word_identifier not in self.glossary:
             raise Exception(f'Word {word_identifier} not found in glossary.')
+
+        if lower:
+            return self.glossary[word_identifier].lower()
 
         return self.glossary[word_identifier]

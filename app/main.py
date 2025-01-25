@@ -2,6 +2,7 @@ import numpy as np
 import warnings
 from Glossary import Glossary
 from Predictor import Predictor
+from SamplePredictor import SamplePredictor
 from SampleTrainer import SampleTrainer
 from TerminalPrinter import TerminalPrinter
 from Trainer import Trainer
@@ -51,7 +52,7 @@ def ask_for_action(printer: TerminalPrinter, glossary: Glossary):
                 printer.print(glossary.get('training_in_progress') + '... (' + glossary.get('interrupt_by') + ' Ctrl + C)')
                 try:
                     trainer  = Trainer(data_start_year, data_end_year, enroll_data, prediction_epoch, beta_value, glossary)
-                    messages = trainer.parse_data()
+                    messages = trainer.parse_data('training/')
                     printer.print(messages)
                     messages = trainer.train()
                     printer.empty_line()
@@ -60,19 +61,25 @@ def ask_for_action(printer: TerminalPrinter, glossary: Glossary):
                     for key, value in messages.items():
                         printer.print(f'{key}: {value}')
                     printer.empty_line()
+                    printer.empty_line()
                 except Exception as e:
                     printer.error(str(e))
-                printer.error(glossary.get('not_implemented'))
+                what_to_do(printer, glossary)
             elif train_or_predict == 'p':
                 # PREDICT
                 printer.empty_line()
-                approved = ask_for_model_approval(printer, glossary)
-                if (approved):
+                approved_model_details = ask_for_model_approval(printer, glossary)
+                if (approved_model_details is not None):
                     printer.empty_line()
-                    printer.print(glossary.get('predicting') + '...')
+                    printer.print(glossary.get('predicting_in_progress') + '...')
                     predictor = Predictor(glossary)
-                    messages = predictor.predict()
-                    printer.print(messages)
+                    try:
+                        messages = predictor.predict(approved_model_details)
+                    except Exception as e:
+                        printer.error(str(e))
+                    printer.yellow(messages)
+                    printer.empty_line()
+                    exit()
                 else:
                     what_to_do(printer, glossary)
             elif train_or_predict == 'v':
@@ -93,17 +100,29 @@ def ask_for_action(printer: TerminalPrinter, glossary: Glossary):
                     messages = trainer.parse_data()
                     printer.print(messages)
                     messages = trainer.train()
-                    printer.print(messages)
+                    # print message dict nicely
+                    for key, value in messages.items():
+                        printer.print(f'{key}: {value}')
                 except Exception as e:
                     printer.error(str(e))
-                printer.error(glossary.get('not_implemented'))
-            elif train_or_predict == 'b':
                 printer.empty_line()
-                printer.error(glossary.get('not_implemented'))
+                what_to_do(printer, glossary)
+            elif train_or_predict == 'b':
+                # TEST PREDICTING WITH SAMPLE DATA
+                printer.empty_line()
+                printer.print(glossary.get('predicting_in_progress') + '...')
+                predictor = SamplePredictor(glossary)
+                try:
+                    messages = predictor.predict()
+                except Exception as e:
+                    printer.error(str(e))
+                printer.yellow(messages)
+                printer.empty_line()
+                what_to_do(printer, glossary)
             else:
                 raise ValueError
         except ValueError:
-            printer.error(glossary.get('invalid_input'))
+            printer.error(glossary.get('invalid_input') + ': ' + train_or_predict)
 
 def ask_for_training_years(printer: TerminalPrinter, glossary: Glossary):
     while True:
@@ -189,19 +208,25 @@ def ask_for_enroll_data(data_start_year, printer: TerminalPrinter, glossary: Glo
         except ValueError:
             printer.error(glossary.get('invalid_input'))
 
+"""
+Find the saved model.
+Ask for approval to use the model.
+If approved, return model retails. If not approved, return None.
+"""
 def ask_for_model_approval(printer: TerminalPrinter, glossary: Glossary):
     while True:
         try:
             if (Predictor.model_exists()):
                 printer.yellow(glossary.get('model_found'))
-                printer.model_details(Predictor.get_model_details())
+                model_details = Predictor.get_model_details()
+                printer.model_details(model_details)
                 printer.yellow(glossary.get('model_approval'))
                 model_approval = input('> ').lower()
                 check_for_quitting(model_approval, printer)
                 if (model_approval == 'y'):
-                    return True
+                    return model_details
                 elif (model_approval == 'n'):
-                    return False
+                    return None
                 else:
                     raise ValueError
             else:

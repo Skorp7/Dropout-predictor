@@ -3,3 +3,4 @@ __pycache__/
 data_in/
 data_processed/
 models/
+data_out/predictions.csv
