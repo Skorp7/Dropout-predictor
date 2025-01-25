@@ -35,6 +35,7 @@ def ask_for_action(printer: TerminalPrinter, glossary: Glossary):
             train_or_predict = input('> ').lower()
             check_for_quitting(train_or_predict, printer)
             if train_or_predict == 't':
+                # TRAIN
                 printer.empty_line()
                 printer.yellow(glossary.get('training_instructions'))
                 printer.yellow(glossary.get('press_enter_to_continue'))
@@ -63,6 +64,7 @@ def ask_for_action(printer: TerminalPrinter, glossary: Glossary):
                     printer.error(str(e))
                 printer.error(glossary.get('not_implemented'))
             elif train_or_predict == 'p':
+                # PREDICT
                 printer.empty_line()
                 approved = ask_for_model_approval(printer, glossary)
                 if (approved):
@@ -74,6 +76,7 @@ def ask_for_action(printer: TerminalPrinter, glossary: Glossary):
                 else:
                     what_to_do(printer, glossary)
             elif train_or_predict == 'v':
+                # VALIDATE ENVIRONMENT
                 printer.empty_line()
                 validator = Validator(glossary)
                 printer.print(glossary.get('validating') + '...')
@@ -82,6 +85,7 @@ def ask_for_action(printer: TerminalPrinter, glossary: Glossary):
                 printer.empty_line()
                 what_to_do(printer, glossary)
             elif train_or_predict == 'a':
+                # TEST TRAINING WITH SAMPLE DATA
                 printer.empty_line()
                 printer.print(glossary.get('training_in_progress') + '... (' + glossary.get('interrupt_by') + ' Ctrl + C)')
                 try:
