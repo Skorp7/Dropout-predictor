@@ -11,4 +11,7 @@ class SampleTrainer(Trainer):
 
     def parse_data(self):
         # Fetch data from sample folder
-        super().parse_data('samples/sample_')
+        return super().parse_data('samples/sample_')
+
+    def train(self):
+        return super().train('samples/sample_', 10)

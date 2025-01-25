@@ -52,7 +52,7 @@ def ask_for_action(printer: TerminalPrinter, glossary: Glossary):
                 printer.print(glossary.get('training_in_progress') + '... (' + glossary.get('interrupt_by') + ' Ctrl + C)')
                 try:
                     trainer  = Trainer(data_start_year, data_end_year, enroll_data, prediction_epoch, beta_value, glossary)
-                    messages = trainer.parse_data('training/')
+                    messages = trainer.parse_data()
                     printer.print(messages)
                     messages = trainer.train()
                     printer.empty_line()
@@ -100,6 +100,8 @@ def ask_for_action(printer: TerminalPrinter, glossary: Glossary):
                     messages = trainer.parse_data()
                     printer.print(messages)
                     messages = trainer.train()
+                    printer.empty_line()
+                    printer.yellow(glossary.get('training_results') + ':')
                     # print message dict nicely
                     for key, value in messages.items():
                         printer.print(f'{key}: {value}')

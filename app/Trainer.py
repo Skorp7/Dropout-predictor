@@ -24,18 +24,21 @@ class Trainer:
         self.hyperparameters  = None
 
     def parse_data(self, file_prefix: str|None = None):
+        path = 'training/'
+        if (file_prefix is not None):
+            path += file_prefix
         self.parsed_data_df = DataParser(self.glossary).parse(
             self.data_start_year,
             self.data_end_year,
             self.include_enrolls,
             False, # This not data for prediction, but for training.
             self.prediction_epoch,
-            file_prefix,
+            path,
         )
 
         return self.glossary.get('data_parsed') + '... '
 
-    def optimise_hyperparameters(self, data: pd.DataFrame, target: pd.DataFrame):
+    def optimise_hyperparameters(self, data: pd.DataFrame, target: pd.DataFrame, trials: int = 500):
         self.fixed_params = {
             'booster': 'gbtree',
             'eval_metric': 'logloss',
@@ -45,7 +48,7 @@ class Trainer:
             'n_estimators': 80, # Number of boosting rounds.
         }
 
-        return find_best_params(data, target, self.beta_value, self.fixed_params)
+        return find_best_params(data, target, self.beta_value, self.fixed_params, trials)
 
     def get_training_metrics(self, model, data, target):
         # Predict
@@ -72,7 +75,7 @@ class Trainer:
     Training uses the whole data set for training. So, training accuracy/recall/other metrics are not good measures of model performance.
     Model validation is done when tuning hyperparameters.
     """
-    def train(self):
+    def train(self, file_prefix: str|None = None, trials: int|None = None):
         if self.parsed_data_df is None:
             raise RuntimeError('Data not parsed yet. Parse data before training.')
 
@@ -84,7 +87,7 @@ class Trainer:
         data = data_df.drop(columns=['dropout'])
 
         # Optimise hyperparameters
-        best_params = self.optimise_hyperparameters(data, target)
+        best_params = self.optimise_hyperparameters(data, target, trials)
         # Add fixed parameters to the best parameters to get all hyperparameters.
         best_params.update(self.fixed_params)
         self.hyperparameters = best_params
@@ -94,7 +97,7 @@ class Trainer:
         model.fit(data, target)
 
         # Save the model
-        self.save_model(model)
+        self.save_model(model, file_prefix)
 
         # Show training results
         training_results                    = self.get_training_metrics(model, data, target)
@@ -102,9 +105,12 @@ class Trainer:
 
         return training_results
 
-    def save_model(self, model):
+    def save_model(self, model, file_prefix: str|None = None):
+        path = 'models/'
+        if (file_prefix is not None):
+            path += file_prefix
         # Save model
-        model.save_model('models/model.json')
+        model.save_model(path + 'model.json')
 
         # Save training details to json too
         model_details = {
@@ -116,6 +122,6 @@ class Trainer:
         }
         model_details['hyperparameters'] = self.hyperparameters
         # Save
-        with open('models/model_details.json', 'w') as f:
+        with open(path + 'model_details.json', 'w') as f:
             json.dump(model_details, f, indent=4)
         f.close()

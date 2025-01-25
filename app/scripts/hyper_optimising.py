@@ -41,7 +41,7 @@ data - the training data
 target - the target data
 b - the beta value to use in the F-score
 """
-def find_best_params(data: pd.DataFrame, target: pd.DataFrame, b: float, fixed_params_dict: dict):
+def find_best_params(data: pd.DataFrame, target: pd.DataFrame, b: float, fixed_params_dict: dict, trials: int):
     global X, y, beta, fixed_params
     # Set globals
     X            = data
@@ -54,7 +54,7 @@ def find_best_params(data: pd.DataFrame, target: pd.DataFrame, b: float, fixed_p
 
     # Create the study and optimize the objective function
     study = optuna.create_study(direction='maximize')
-    study.optimize(objective, n_trials=500, show_progress_bar=True)
+    study.optimize(objective, n_trials=trials, show_progress_bar=True)
 
     # Get the best hyperparameters
     return study.best_params
