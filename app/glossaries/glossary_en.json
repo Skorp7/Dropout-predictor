@@ -13,6 +13,7 @@
     "hyperparameters": "Hyperparameters",
     "interrupt_by": "Interrupt by pressing",
     "invalid_input": "Invalid input. Please try again.",
+    "invalid_model": "There is something wrong with the model details. Re-train the model.",
     "minimum": "Minimum",
     "model_approval": "Do you want to use this model? (y/n)",
     "model_details": "Model has been trained with these details and hyperparameters",

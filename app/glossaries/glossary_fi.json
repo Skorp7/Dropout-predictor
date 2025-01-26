@@ -13,6 +13,7 @@
     "hyperparameters": "Hyperparametrit",
     "interrupt_by": "Keskeytä painamalla",
     "invalid_input": "Virheellinen syöte. Yritä uudelleen.",
+    "invalid_model": "Mallin tiedoissa on jotain vikaa. Kouluta malli uudelleen.",
     "minimum": "Vähintään",
     "model_approval": "Haluatko käyttää tätä mallia? (y/n)",
     "model_details": "Malli on koulutettu näillä tiedoilla ja hyperparametreilla",

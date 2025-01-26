@@ -23,9 +23,15 @@ class Predictor:
 
         try:
             with open(file_path_model, 'r') as file:
+                line1 = file.readline()
+                if (line1 == ''):
+                    return False
                 pass
             file.close()
             with open(file_path_model_details, 'r') as file:
+                line1 = file.readline()
+                if (line1 == ''):
+                    return False
                 pass
             file.close()
 
@@ -45,7 +51,26 @@ class Predictor:
             model_details = json.load(file)
         file.close()
 
+        if not Predictor.validate_model_details(model_details):
+            return None
+
         return model_details
+
+    @staticmethod
+    def validate_model_details(model_details: dict):
+        required_keys = [
+            'data_start_year',
+            'data_end_year',
+            'include_enrolls',
+            'prediction_epoch',
+            'beta_value',
+            'hyperparameters',
+        ]
+        for key in required_keys:
+            if key not in model_details:
+                return False
+
+        return True
 
     @staticmethod
     def required_files_info(model_details: dict, year: int):

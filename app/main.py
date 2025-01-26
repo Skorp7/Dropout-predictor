@@ -71,16 +71,16 @@ def ask_for_action(printer: TerminalPrinter, glossary: Glossary):
                 # PREDICT
                 printer.empty_line()
                 approved_model_details = ask_for_model_approval(printer, glossary)
-                prediction_year        = ask_for_predicting_year(printer, glossary)
-                printer.yellow(glossary.get('predicting_instructions') + ' (' + str(approved_model_details['prediction_epoch']) + glossary.get('years') + ')')
-                file_list = Predictor.required_files_info(approved_model_details, prediction_year)
-                for file in file_list:
-                    printer.yellow(file)
-                printer.empty_line()
-                printer.yellow(glossary.get('press_enter_to_continue'))
-                answer = input('>')
-                check_for_quitting(answer, printer)
                 if (approved_model_details is not None):
+                    prediction_year        = ask_for_predicting_year(printer, glossary)
+                    printer.yellow(glossary.get('predicting_instructions') + ' (' + str(approved_model_details['prediction_epoch']) + glossary.get('years') + ')')
+                    file_list = Predictor.required_files_info(approved_model_details, prediction_year)
+                    for file in file_list:
+                        printer.yellow(file)
+                    printer.empty_line()
+                    printer.yellow(glossary.get('press_enter_to_continue'))
+                    answer = input('>')
+                    check_for_quitting(answer, printer)
                     logger = ProgressLogger(10)
                     printer.empty_line()
                     printer.print(glossary.get('predicting_in_progress') + '...')
@@ -255,6 +255,8 @@ def ask_for_model_approval(printer: TerminalPrinter, glossary: Glossary):
             if (Predictor.model_exists()):
                 printer.yellow(glossary.get('model_found'))
                 model_details = Predictor.get_model_details()
+                if (model_details is None):
+                    raise RuntimeError(glossary.get('invalid_model'))
                 printer.model_details(model_details)
                 printer.yellow(glossary.get('model_approval'))
                 model_approval = input('> ').lower()
@@ -271,6 +273,8 @@ def ask_for_model_approval(printer: TerminalPrinter, glossary: Glossary):
                 what_to_do(printer, glossary)
         except ValueError:
             printer.error(glossary.get('invalid_input'))
+        except Exception as e:
+            printer.error(str(e))
 
 def check_for_quitting(input: str, printer: TerminalPrinter):
     if input == 'q':
