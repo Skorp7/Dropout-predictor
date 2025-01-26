@@ -9,17 +9,26 @@ conda activate dropout-env
 ```
 Ensimmäinen rivi luo ympäristön, toinen käynnistää sen. Voit sammuuttaa ympäristön ```conda deactivate```.
 
+### Teknisten vaatimusten tarkistaminen
+
+Voit tarkistaa kahdella tavalla, onko kaikki tarpeellinen asennettuna.
+1. [Käynnistä ohjelma](#ohjelman-käynnistäminen) ja valitse "V", eli testaa ympäristö.
+2. [Käynnistä ohjelma](#ohjelman-käynnistäminen) ja valitse "A", eli testaa kouluttamista esimerkkiaineistolla. Tämän jälkeen valitse "B", eli testaa ennustamista äsken koulutetulla esimerkkimallilla.
+3. Jos kumpikin kohta meni läpi ilman virheilmoituksia, ohjelmointiympäristö on kunnossa. Esimerkkiaineiston ennustukset ovat kansiossa ```data_out/samples/```. (Sivuhuomio: esimerkkiaineiston pitäisi tuottaa yltiöpositiivinen ennuste, eli kukaan ei ole pudokas.)
+
 ## Aineiston vaatimukset
 
-Aineisto lisätään kahtena tai kolmena ```.csv``` -tiedostona ```data_in/``` -kansioon.
+Aineisto lisätään kahtena tai kolmena ```.csv``` -tiedostona per vuosikurssi ```data_in/``` -kansioon. Tarkemmin joko ```data_in/predicting/``` tai ```data_in/training/``` riippuen siitä, aiotko kouluttaa mallin uudelleen vai tehdä ennusteen.
 Ilmoittautumisaineisto on kolmas aineisto eikä se ole pakollinen jos sitä ei haluta käyttää mallissa.
 
 Aineistot annetaan siten, että jokaista vuotta kohden on 2-3 tiedostoa (esim. 2022_students.csv, 2022_credits.csv ja 2022_enrollments.csv).
-Vuosi tarkoittaa tässä tapauksessa tuona vuonna aloittaneita opiskelijoita.
+Vuosi tarkoittaa tässä tapauksessa tuona vuonna opinto-oikeuden saaneita opiskelijoita.
 
 Vuonna 2022 aloittaneiden opiskelijoiden kaikki suoritustiedot 2022 alkaen 2025 tammikuuhun asti ovat siis tiedostossa 2022_credits.csv jos aineisto luotaisiin tammikuussa 2025.
 
-Kansiossa ```data_in/samples/``` on esimerkkitiedostot kuvitteellisesti 2023 aloittaneista opiskelijoista.
+Kansioissa ```data_in/predicting/samples/``` ja ```data_in/training/samples/``` on esimerkkitiedostot kuvitteellisesti 2023 aloittaneista opiskelijoista.
+
+Huomaa, että .csv tiedostoissa erottimena käytetään puolipistettä. Opiskelija-aineistossa lukukausi-ilmoittautumiset on eroteltu toisitaan pilkuilla.
 
 ### Opiskelija-aineisto
 Tiedoston nimi: ```vuosi_students.csv```, jossa 'vuosi' on se vuosi muodossa vvvv, jolloin nämä opiskelijat ovat saaneet opinto-oikeutensa.
@@ -57,5 +66,17 @@ Aja terminaalissa:
 conda activate dropout-env
 python3 main.py
 ```
+
+## Ennustaminen
+
+Ohjelmassa tulee mukana yksi esikoulutettu malli. Tämä malli on koulutettu vuosina 2017-2022 opinto-oikeutensa saaneiden opiskelijoiden opintoaineistoilla, jotka on kerätty syyskuussa 2024. Aineisto on leikattu poikki 1.5 vuoden kohdalta, eli jokaiselta opiskelijalta on korkeintaan 1.5 vuoden ajalta kurssiaineistoa.
+
+Käyttääksesi valmista mallia, käynnistä ohjelma ylläolevan ohjeen mukaisesti ja valitse ohjelmasta valinta "Ennusta". Ohjelma kertoo tarkemmin, minkälainen valmiiksi koulutettu malli on. Lisää tarpeelliset aineistot kansioon ```data_in/predicting/```(tässä tapauksessa tiedostot ```vuosi_credits.csv``` ja ```vuosi_students.csv```, jossa vuosi korvataan sillä vuodella, jolloin aineiston opiskelijat ovat saaneet opinto-oikeutensa) ja käynnistä ennustaminen.
+
+## Uudelleen kouluttaminen
+
+Mallin uudelleenkouluttaminen tulee tarpeelliseksi, jos halutaan käyttää eri parametrejä kuin valmismallissa on käytetty. Uudelleenkoulutus on myös aiheellista kun nykyinen aineisto alkaa olla vanhentunutta.
+
+Mallin koulutus tapahtuu valitsemalla ohjelmassa "T". Ohjelma kysyy parametrit, joita halutaan käyttää. Lisää aineistot ```data_in/training/``` kansioon ja käynnistä koulutus.
 
 ![Käyttöliittymä](pictures/ui.png)
