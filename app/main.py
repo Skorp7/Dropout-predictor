@@ -2,6 +2,7 @@ import numpy as np
 import warnings
 from Glossary import Glossary
 from Predictor import Predictor
+from ProgressLogger import ProgressLogger
 from SamplePredictor import SamplePredictor
 from SampleTrainer import SampleTrainer
 from TerminalPrinter import TerminalPrinter
@@ -40,7 +41,8 @@ def ask_for_action(printer: TerminalPrinter, glossary: Glossary):
                 printer.empty_line()
                 printer.yellow(glossary.get('training_instructions'))
                 printer.yellow(glossary.get('press_enter_to_continue'))
-                input('>')
+                answer = input('>')
+                check_for_quitting(answer, printer)
                 (data_start_year, data_end_year) = ask_for_training_years(printer, glossary)
                 printer.saved(str(data_start_year) + ' - ' + str(data_end_year))
                 enroll_data = ask_for_enroll_data(data_start_year, printer, glossary)
@@ -51,17 +53,17 @@ def ask_for_action(printer: TerminalPrinter, glossary: Glossary):
                 printer.saved(str(beta_value))
                 printer.print(glossary.get('training_in_progress') + '... (' + glossary.get('interrupt_by') + ' Ctrl + C)')
                 try:
-                    trainer  = Trainer(data_start_year, data_end_year, enroll_data, prediction_epoch, beta_value, glossary)
+                    logger   = ProgressLogger(10 + Trainer.TRIALS)
+                    trainer  = Trainer(data_start_year, data_end_year, enroll_data, prediction_epoch, beta_value, glossary, logger)
                     messages = trainer.parse_data()
-                    printer.print(messages)
                     messages = trainer.train()
-                    printer.empty_line()
+                    logger.finish()
+                    printer.empty_line(2)
                     printer.yellow(glossary.get('training_results') + ':')
                     # print message dict nicely
                     for key, value in messages.items():
                         printer.print(f'{key}: {value}')
-                    printer.empty_line()
-                    printer.empty_line()
+                    printer.empty_line(2)
                 except Exception as e:
                     printer.error(str(e))
                 what_to_do(printer, glossary)
@@ -69,14 +71,26 @@ def ask_for_action(printer: TerminalPrinter, glossary: Glossary):
                 # PREDICT
                 printer.empty_line()
                 approved_model_details = ask_for_model_approval(printer, glossary)
+                prediction_year        = ask_for_predicting_year(printer, glossary)
+                printer.yellow(glossary.get('predicting_instructions') + ' (' + str(approved_model_details['prediction_epoch']) + glossary.get('years') + ')')
+                file_list = Predictor.required_files_info(approved_model_details, prediction_year)
+                for file in file_list:
+                    printer.yellow(file)
+                printer.empty_line()
+                printer.yellow(glossary.get('press_enter_to_continue'))
+                answer = input('>')
+                check_for_quitting(answer, printer)
                 if (approved_model_details is not None):
+                    logger = ProgressLogger(10)
                     printer.empty_line()
                     printer.print(glossary.get('predicting_in_progress') + '...')
-                    predictor = Predictor(glossary)
+                    predictor = Predictor(glossary, prediction_year, logger)
                     try:
                         messages = predictor.predict(approved_model_details)
                     except Exception as e:
                         printer.error(str(e))
+                    logger.finish()
+                    printer.empty_line(2)
                     printer.yellow(messages)
                     printer.empty_line()
                     exit()
@@ -95,11 +109,12 @@ def ask_for_action(printer: TerminalPrinter, glossary: Glossary):
                 # TEST TRAINING WITH SAMPLE DATA
                 printer.empty_line()
                 printer.print(glossary.get('training_in_progress') + '... (' + glossary.get('interrupt_by') + ' Ctrl + C)')
+                logger = ProgressLogger(14)
                 try:
-                    trainer  = SampleTrainer(glossary)
-                    messages = trainer.parse_data()
-                    printer.print(messages)
+                    trainer  = SampleTrainer(glossary, logger)
                     messages = trainer.train()
+                    logger.finish()
+                    printer.empty_line()
                     printer.empty_line()
                     printer.yellow(glossary.get('training_results') + ':')
                     # print message dict nicely
@@ -113,11 +128,14 @@ def ask_for_action(printer: TerminalPrinter, glossary: Glossary):
                 # TEST PREDICTING WITH SAMPLE DATA
                 printer.empty_line()
                 printer.print(glossary.get('predicting_in_progress') + '...')
-                predictor = SamplePredictor(glossary)
+                logger    = ProgressLogger(7)
+                predictor = SamplePredictor(glossary, logger)
                 try:
                     messages = predictor.predict()
                 except Exception as e:
                     printer.error(str(e))
+                logger.finish()
+                printer.empty_line(2)
                 printer.yellow(messages)
                 printer.empty_line()
                 what_to_do(printer, glossary)
@@ -149,6 +167,22 @@ def ask_for_training_years(printer: TerminalPrinter, glossary: Glossary):
                 and data_end_year >= data_start_year
             ):
                 return (int(data_start_year), int(data_end_year))
+            else:
+                raise ValueError
+        except ValueError:
+            printer.error(glossary.get('invalid_input'))
+
+def ask_for_predicting_year(printer: TerminalPrinter, glossary: Glossary):
+    while True:
+        try:
+            printer.yellow(glossary.get('data_pred_year'))
+            data_start_year = input('> ').lower()
+            check_for_quitting(data_start_year, printer)
+
+            data_start_year = int(data_start_year)
+
+            if data_start_year > 2016:
+                return int(data_start_year)
             else:
                 raise ValueError
         except ValueError:

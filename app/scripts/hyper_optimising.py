@@ -4,12 +4,14 @@ import xgboost as xgb
 import pandas as pd
 from sklearn.model_selection import cross_val_score, StratifiedKFold
 from sklearn.metrics import make_scorer, fbeta_score
+from ProgressLogger import ProgressLogger
 
 # Global variables
 X            = None
 y            = None
 beta         = None
 fixed_params = {}
+prog_logger  = None
 
 def fbeta_scorer(y_true, y_pred):
     return fbeta_score(y_true, y_pred, beta=beta)
@@ -33,6 +35,9 @@ def objective(trial):
     skf    = StratifiedKFold(n_splits=5, shuffle=True, random_state=40)
     f_beta = cross_val_score(xgb.XGBClassifier(**param), X, y, cv=skf, scoring=scorer).mean()
 
+    # Log progress
+    prog_logger.update()
+
     return f_beta
 
 """
@@ -41,20 +46,21 @@ data - the training data
 target - the target data
 b - the beta value to use in the F-score
 """
-def find_best_params(data: pd.DataFrame, target: pd.DataFrame, b: float, fixed_params_dict: dict, trials: int):
-    global X, y, beta, fixed_params
+def find_best_params(data: pd.DataFrame, target: pd.DataFrame, b: float, fixed_params_dict: dict, trials: int, logger: ProgressLogger):
+    global X, y, beta, fixed_params, prog_logger
     # Set globals
     X            = data
     y            = target
     beta         = b
     fixed_params = fixed_params_dict
+    prog_logger  = logger
 
     # Set verbosity to WARNING to avoid too much output
     set_verbosity(WARNING)
 
     # Create the study and optimize the objective function
     study = optuna.create_study(direction='maximize')
-    study.optimize(objective, n_trials=trials, show_progress_bar=True)
+    study.optimize(objective, n_trials=trials, show_progress_bar=False)
 
     # Get the best hyperparameters
     return study.best_params

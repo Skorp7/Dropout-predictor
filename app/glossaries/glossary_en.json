@@ -3,8 +3,9 @@
     "beta_value_info": "If beta is higher than 1, recall is weighted in hyperparameter tuning. If beta is lower than 1, precision is weighted. Valid values: 0.1-10.0. Or press ENTER to select default (1.6)",
     "data_end_year": "Insert data end year. The year when the students started their studies. (YYYY) Press ENTER if you have data only from students who started in one year.",
     "data_start_year": "Insert data start year. The year when the students started their studies. (YYYY)",
+    "data_pred_year": "Insert data prediction year. The year when the students started their studies. (YYYY)",
     "data_parsed": "Data parsed",
-    "description": "This is an application that predicts if a student is likely to drop out of the university.\nPrediction is done by course data and some personal information. \nThe model is pre-trained to predict dropout based on 1.5 years of course data.",
+    "description": "This is an application that predicts if a student is likely to drop out of the university.\nPrediction is done by course data and some information of the student. \nThe model is pre-trained to predict dropout based on 1.5 years of course data.",
     "enroll_data": "Is enrolling data included? Not possible before 2020. (y/n)",
     "exit": "Exit",
     "greeting": "Hello world",
@@ -13,6 +14,7 @@
     "interrupt_by": "Interrupt by pressing",
     "invalid_input": "Invalid input. Please try again.",
     "minimum": "Minimum",
+    "model_approval": "Do you want to use this model? (y/n)",
     "model_details": "Model has been trained with these details and hyperparameters",
     "model_found": "Pre-trained model exists.",
     "no_model": "No model found. Train the model first.",
@@ -23,7 +25,9 @@
     "predict": "Predict",
     "predicting": "predicting",
     "prediction_epoch": "Insert prediction epoch (1, 1.5, 2, 2.5, 3 or 3.5) years (how long students have studied before the prediction). Press ENTER to select default (2 years).",
+    "predicting_files": "For the selected model, you need the following files. (Read more about the data format from the README.md file.)",
     "predicting_in_progress": "Predicting in progress",
+    "predicting_instructions": "Before starting the predicting, please make sure that you have the necessary data files in the data_in/predicting folder. The data should be at least from the time the model was trained",
     "press_enter_to_continue": "Press ENTER to continue",
     "saved": "Saved",
     "results": "Results",
@@ -36,7 +40,7 @@
     "training_results": "Training results and hyperparameters used in the model",
     "validating": "Validating",
     "validate_env": "Validate the program environment (dependencies installed)",
-    "model_approval": "Do you want to use this model? (y/n)",
     "what_to_do": "What would you like to do?",
-    "with_sample_data": "with sample data (6 students)"
+    "with_sample_data": "with sample data (6 students)",
+    "years": "years"
 }

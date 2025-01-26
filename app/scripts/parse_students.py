@@ -3,6 +3,7 @@
 import pandas as pd
 import numpy as np
 import scripts.data_utils as data_utils
+from ProgressLogger import ProgressLogger
 # Read data in
 # Suppose data_in/ folder has the following files:
 # YEAR_students.csv, where YEAR is the year of the student getting the study right
@@ -15,14 +16,18 @@ import scripts.data_utils as data_utils
 # include_enrolls - Include enrollments to the data
 
 semester_max = 17 # approx 8 years of studies
-def parse_students(years: list, include_enrolls: bool, data_for_prediction: bool, file_prefix: str = None):
+def parse_students(years: list, include_enrolls: bool, data_for_prediction: bool, file_prefix: str = None, logger: ProgressLogger = None):
     path = 'data_in/'
     if (file_prefix is not None):
         path = path + file_prefix
     for year in years:
+        logger.increase_total(5)
+        logger.update()
+
         students_file = path + str(year) + '_students.csv'
         courses_file  = path + str(year) + '_credits.csv'
-        enroll_file   = path + str(year) + '_enrollments.csv'
+        if (include_enrolls):
+            enroll_file = path + str(year) + '_enrollments.csv'
 
         # Students data
         df_students = pd.read_csv(students_file, delimiter=';', header=None, names=['opisknro', 'opinto-oik_alku', 'opinto-oik_loppu', 'aloituspvm', 'valmistunut', 'lukukausi-ilmot', 'syntynyt', 'sukupuoli'])
@@ -30,8 +35,9 @@ def parse_students(years: list, include_enrolls: bool, data_for_prediction: bool
         # Courses data
         df_courses = pd.read_csv(courses_file, delimiter=';', header=None, names=['opisknro', 'arvosana', 'opintopisteet', 'suoritus_pvm', 'kurssikoodi'])
 
-        # Enrollments data
-        df_enroll = pd.read_csv(enroll_file, delimiter=';', header=None, names=['opisknro', 'suoritus_lukukausi', 'suoritus_pvm', 'lukukausi2', 'kurssikoodi'])
+        if (include_enrolls):
+            # Enrollments data
+            df_enroll = pd.read_csv(enroll_file, delimiter=';', header=None, names=['opisknro', 'suoritus_lukukausi', 'suoritus_pvm', 'lukukausi2', 'kurssikoodi'])
 
 
         # HANDLE STUDENT ID AND DATES
@@ -111,20 +117,14 @@ def parse_students(years: list, include_enrolls: bool, data_for_prediction: bool
         # Group table by kurssikoodi to get course info for enrollments
         df_course_infos = df_courses.groupby('kurssikoodi').agg({'opintopisteet': 'median', 'arvosana': 'first'}).reset_index()
 
-        df_course_infos['arvosana'] = -1
+        df_course_infos['arvosana']      = -1
+        df_course_infos['opintopisteet'] = 0
 
         # REMOVE ROWS THAT ARE AFTER GRADUATION
         df_courses = df_courses[df_courses['suoritus_pvm'] <= df_courses['opinto-oik_loppu_datetime']]
 
         if (include_enrolls):
             # CREATE COURSES FROM ENROLLMENTS IF COURSE IS NOT PASSED
-
-            # If df_enroll has same opisknro than in df_courses but a kurssikoodi which does not exist in df_courses, then add that row of df_enroll to df_courses
-            def create_course_from_enrollment(row):
-                if row['kurssikoodi'] not in df_courses.loc[df_courses['opisknro'] == row['opisknro'], ['kurssikoodi']].values:
-                    return True
-                else:
-                    return False
 
             # Remove rows where kussikoodi is NaN
             df_enroll = df_enroll.dropna(subset=['kurssikoodi'])
@@ -141,7 +141,6 @@ def parse_students(years: list, include_enrolls: bool, data_for_prediction: bool
             # Drop all columns except 'opisknro', 'period_ordinal', 'kurssikoodi'
             df_enroll = df_enroll.drop(columns=['suoritus_lukukausi','periodi', 'lukukausi2', 'suoritus_pvm', 'suoritus_periodi', 'opinto-oik_loppu_datetime', 'suoritus_vuosi', 'suoritus_kk', 'aloitus_vuosi', 'aloitus_periodi', 'valmistumisperiodi'])
             df_enroll = df_enroll.merge(df_course_infos, on='kurssikoodi')
-            courses_to_add = df_enroll[df_enroll.apply(create_course_from_enrollment, axis=1)]
             df_courses_simple = df_courses[['opisknro', 'kurssikoodi', 'arvosana', 'opintopisteet', 'period_ordinal']]
 
             # Merge df_enroll to df_courses but do not accept duplicates for opisknro + kurssikoodi combination
@@ -163,9 +162,6 @@ def parse_students(years: list, include_enrolls: bool, data_for_prediction: bool
             df_courses = pd.concat([df_courses, df_courses_with_enrollments]).drop_duplicates(subset=['opisknro','kurssikoodi'], keep='first')
             # Fill 'keskeytetty' with 0 if it is np.nan since df_courses may not have that column set
             df_courses['keskeytetty'] = df_courses['keskeytetty'].fillna(0)
-
-        # REMOVE ROWS OF 0 CREDITS ( this makes average grade calculation more accurate. Also 0 credit courses are usually completed at same time with course with credits (like bachelor thesis) )
-        df_courses = df_courses[df_courses['opintopisteet'] > 0]
 
         # Drop the now unnecessary date columns
         df_courses = df_courses.drop(columns=['suoritus_pvm', 'suoritus_vuosi', 'suoritus_kk', 'opinto-oik_loppu_datetime'])
@@ -189,7 +185,7 @@ def parse_students(years: list, include_enrolls: bool, data_for_prediction: bool
 
         # Duplicate arvosana column
         df_courses['arvosana_dup'] = df_courses['arvosana']
-
+        logger.update()
         # Set flag for failed courses
         df_courses['failed'] = df_courses['arvosana'].apply(lambda x: 1 if x == 0 else 0)
 
@@ -235,6 +231,8 @@ def parse_students(years: list, include_enrolls: bool, data_for_prediction: bool
             if (include_enrolls):
                 df_students_periodial.loc[df_students_periodial['valmistumisperiodi'] <= i, 'kesk_' + str(i)] = np.nan
 
+        logger.update()
+
         # Fill period gredits with NaN where student is not enrolled for semester (adecuate reason) and has no credits
         df_students_periodial = df_students_periodial.apply(data_utils.credits_to_nan_if_adequate_absent, axis=1)
 
@@ -247,7 +245,7 @@ def parse_students(years: list, include_enrolls: bool, data_for_prediction: bool
                 if row['op_' + str(period)] == 0 and row['op_' + str(period + 1)] == 0 and row['op_' + str(period + 2)] == 0 and row['op_' + str(period + 3)] == 0 and row['op_' + str(period + 4)] == 0 and row['op_' + str(period + 5)] == 0:
                     df_students_periodial.at[index, '6_consecutive_zeros'] = 1
                     break
-        
+        logger.update()
         # ATTACH "6_CONSECUTIVE_ZEROS" ALSO TO ENROLLMENTS DATA BY STUDENT IDENTIFIER
         if (include_enrolls):
             df_courses_with_enrollments = pd.merge(df_courses_with_enrollments, df_students_periodial[['6_consecutive_zeros', 'opisknro']], on='opisknro', how='left')
@@ -264,6 +262,8 @@ def parse_students(years: list, include_enrolls: bool, data_for_prediction: bool
 
         # Remove columns opisknro,opinto-oik_alku,opinto-oik_loppu,aloituspvm,valmistunut,lukukausi-ilmot,sukupuoli,aloitus_periodi,aloitus_vuosi,opinto-oik_loppu_datetime,valmistumisperiodi,
         df_students_periodial = df_students_periodial.drop(columns=columns_to_drop)
+
+        logger.update()
 
         #save df to csv file
         output_path = 'data_processed/'

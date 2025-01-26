@@ -13,8 +13,9 @@ class TerminalPrinter:
     def clear(self):
         os.system('cls' if os.name == 'nt' else 'clear')
 
-    def empty_line(self):
-        print('')
+    def empty_line(self, count: int = 1):
+        for _ in range(count):
+            print('')
 
     def banner(self):
         self.clear()

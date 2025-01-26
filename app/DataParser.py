@@ -2,10 +2,12 @@ import pandas as pd
 from scripts.parse_students import parse_students
 from scripts.cut_and_prepare_data import cut_data
 from Glossary import Glossary
+from ProgressLogger import ProgressLogger
 
 class DataParser:
-    def __init__(self, glossary: Glossary):
+    def __init__(self, glossary: Glossary, logger: ProgressLogger):
         self.glossary = glossary
+        self.logger   = logger
 
     """
     Parse data to be ready for training the model.
@@ -14,8 +16,11 @@ class DataParser:
     def parse(self, data_start_year: int, data_end_year: int, include_enrolls: bool, data_for_prediction: bool, prediction_epoch: float, file_prefix: str|None = None):
         years = range(data_start_year, data_end_year + 1)
         self.parse_students_data(years, include_enrolls, data_for_prediction, file_prefix)
+        self.logger.update()
         self.combine_yearly_datasets(years, include_enrolls, file_prefix)
+        self.logger.update()
         ready_data_df = self.cut_data(prediction_epoch, years, include_enrolls, file_prefix)
+        self.logger.update()
 
         return ready_data_df
 
@@ -30,7 +35,7 @@ class DataParser:
     Parse students, courses and enrollments and save to csv.
     """
     def parse_students_data(self, years: list, include_enrolls: bool, data_for_prediction: bool, file_prefix: str|None = None):
-        parse_students(years, include_enrolls, data_for_prediction, file_prefix)
+        parse_students(years, include_enrolls, data_for_prediction, file_prefix, self.logger)
 
     """
     Combine yearly datasets into one.

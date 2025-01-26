@@ -3,10 +3,13 @@ import pandas as pd
 import xgboost as xgb
 from DataParser import DataParser
 from Glossary import Glossary
+from ProgressLogger import ProgressLogger
 
 class Predictor:
-    def __init__(self, glossary: Glossary):
-        self.glossary = glossary
+    def __init__(self, glossary: Glossary, prediction_year: int, logger: ProgressLogger):
+        self.glossary        = glossary
+        self.prediction_year = prediction_year
+        self.logger          = logger
 
     @staticmethod
     def model_exists(file_prefix: str|None = None):
@@ -44,6 +47,19 @@ class Predictor:
 
         return model_details
 
+    @staticmethod
+    def required_files_info(model_details: dict, year: int):
+        enrolls = model_details['include_enrolls']
+
+        filelist = [
+            str(year) + '_students.csv',
+            str(year) + '_credits.csv',
+        ]
+        if (enrolls):
+            filelist.append(str(year) + '_enrollments.csv')
+
+        return filelist
+
     def get_model_json(self, file_prefix: str|None = None):
         path = 'models/'
         if (file_prefix is not None):
@@ -58,7 +74,9 @@ class Predictor:
         return model
 
     def predict(self, model_details: dict, file_prefix: str|None = None):
-        prefix = 'predicting/'
+        self.logger.update()
+
+        prefix     = 'predicting/'
         model_path = 'models/'
         if (file_prefix is not None):
             prefix += file_prefix
@@ -71,8 +89,12 @@ class Predictor:
         model           = xgb.XGBClassifier()
         model.load_model(model_json_path)
 
+        self.logger.update()
+
         # Predict
         predictions = model.predict(df_data)
+
+        self.logger.update()
 
         # Combine predictions with student ids
         predictions               = pd.DataFrame(predictions, columns=['dropout'])
@@ -94,9 +116,9 @@ class Predictor:
         return self.glossary.get('results') + ' '  + self.glossary.get('saved', True) + ': ' + path + 'predictions.csv'
 
     def parse_data(self, model_details, file_prefix: str|None = None):
-        parsed_data_df = DataParser(self.glossary).parse(
-            model_details['data_start_year'],
-            model_details['data_end_year'],
+        parsed_data_df = DataParser(self.glossary, self.logger).parse(
+            self.prediction_year,
+            self.prediction_year,
             model_details['include_enrolls'],
             True,
             model_details['prediction_epoch'],
