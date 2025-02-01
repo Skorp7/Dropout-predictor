@@ -1,4 +1,3 @@
-import json
 import pandas as pd
 import xgboost as xgb
 import FileHandler
@@ -76,19 +75,6 @@ class Predictor:
             filelist.append(str(year) + '_enrollments.csv')
 
         return filelist
-
-    def get_model_json(self, file_prefix: str|None = None):
-        path = 'models/'
-        if (file_prefix is not None):
-            path += file_prefix
-        # Open the model json
-        file_path_model = path + 'model.json'
-
-        with open(file_path_model, 'r') as file:
-            model = json.load(file)
-        file.close()
-
-        return model
 
     def predict(self, model_details: dict, file_prefix: str|None = None):
         self.logger.update()
