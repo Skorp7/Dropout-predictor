@@ -5,7 +5,7 @@
     "data_start_year": "Vuosi (aineiston opiskelijoiden aloitusvuosi), josta aineistot alkavat (VVVV)",
     "data_pred_year": "Vuosi (aineiston opiskelijoiden aloitusvuosi) (VVVV)",
     "data_parsed": "Aineisto valmisteltu",
-    "description": "Tämä on sovellus, joka ennustaa, onko opiskelija vaarassa keskeyttää yliopisto-opintonsa.\nEnnustaminen perustuu kurssiaineistoon ja muihin opiskelijan tietoihin.\nMalli on esikoulutettu ennustamaan pudokkuutta 1.5 vuoden kurssiaineiston perusteella.",
+    "description": "Tämä on sovellus, joka ennustaa, onko opiskelija vaarassa keskeyttää yliopisto-opintonsa.\nEnnustaminen perustuu kurssiaineistoon ja opiskelijan taustatietoihin.\nMalli on esikoulutettu ennustamaan pudokkuutta 1.5 vuoden kurssiaineiston perusteella.",
     "enroll_data": "Onko ilmoittautumisaineistot mukana? Ei mahdollista ennen vuotta 2020. (y/n)",
     "exit": "Poistu",
     "greeting": "Hei maailma",
