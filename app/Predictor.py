@@ -1,6 +1,7 @@
 import json
 import pandas as pd
 import xgboost as xgb
+import FileHandler
 from DataParser import DataParser
 from Glossary import Glossary
 from ProgressLogger import ProgressLogger
@@ -22,18 +23,11 @@ class Predictor:
         file_path_model_details = path + 'model_details.json'
 
         try:
-            with open(file_path_model, 'r') as file:
-                line1 = file.readline()
-                if (line1 == ''):
-                    return False
-                pass
-            file.close()
-            with open(file_path_model_details, 'r') as file:
-                line1 = file.readline()
-                if (line1 == ''):
-                    return False
-                pass
-            file.close()
+            if (
+                not FileHandler.is_file_empty(file_path_model) and
+                not FileHandler.is_file_empty(file_path_model_details)
+            ):
+                return True
 
             return True
         except FileNotFoundError:
@@ -47,9 +41,7 @@ class Predictor:
         # Open the model details json
         file_path_model_details = path + 'model_details.json'
 
-        with open(file_path_model_details, 'r') as file:
-            model_details = json.load(file)
-        file.close()
+        model_details = FileHandler.load_file_as_json(file_path_model_details)
 
         if not Predictor.validate_model_details(model_details):
             return None
@@ -136,7 +128,7 @@ class Predictor:
             path += file_prefix
 
         # Save predictions to csv
-        results.to_csv(path + 'predictions.csv', index=False)
+        FileHandler.save_dataframe_as_csv(results, path + 'predictions.csv')
 
         return self.glossary.get('results') + ' '  + self.glossary.get('saved', True) + ': ' + path + 'predictions.csv'
 

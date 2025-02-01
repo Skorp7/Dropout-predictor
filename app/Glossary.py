@@ -1,4 +1,4 @@
-import json
+import FileHandler
 
 class Glossary:
     # Supported languages
@@ -21,11 +21,8 @@ class Glossary:
         """
         # Create file path
         file_path = f'glossaries/glossary_{self.lang_code}.json'
-        # Open file
-        with open(file_path) as file:
-            self.glossary = json.load(file)
 
-        file.close()
+        self.glossary = FileHandler.load_file_as_json(file_path)
 
     def get(self, word_identifier, lower = False):
         """

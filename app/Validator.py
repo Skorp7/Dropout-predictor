@@ -1,4 +1,5 @@
 import sys
+import FileHandler
 from Glossary import Glossary
 
 class Validator:
@@ -22,31 +23,30 @@ class Validator:
     def check_dependencies(self):
         # Verify that the required dependencies are installed
         return_str = ''
-        try:
-            # Read the libraries from the essentials.txt file
-            with open('essentials.txt', 'r') as file:
-                libraries = file.readlines()
 
-            # Strip any leading/trailing whitespace or newlines
-            libraries = [lib.strip() for lib in libraries]
-
-            missing_libraries = []
-
-            # Check if each library is installed
-            for lib in libraries:
-                try:
-                    # Attempt to import the library
-                    __import__(lib)
-                except ImportError:
-                    missing_libraries.append(lib)
-
-            if len(missing_libraries) > 0:
-                return_str += self.glossary.get('not_found') + ':'
-                for missing in missing_libraries:
-                    return_str += f'\n- {missing} (' + self.glossary.get('or_sub_dependency') + ')'
-
-                return return_str
-            else:
-                return self.glossary.get('others') + ': OK'
-        except FileNotFoundError:
+        # Read the libraries from the essentials.txt file
+        if (not FileHandler.file_exists('essentials.txt')):
             return 'essentials.txt ' + self.glossary.get('not_found')
+        libraries = FileHandler.read_lines('essentials.txt')
+
+        # Strip any leading/trailing whitespace or newlines
+        libraries = [lib.strip() for lib in libraries]
+
+        missing_libraries = []
+
+        # Check if each library is installed
+        for lib in libraries:
+            try:
+                # Attempt to import the library
+                __import__(lib)
+            except ImportError:
+                missing_libraries.append(lib)
+
+        if len(missing_libraries) > 0:
+            return_str += self.glossary.get('not_found') + ':'
+            for missing in missing_libraries:
+                return_str += f'\n- {missing} (' + self.glossary.get('or_sub_dependency') + ')'
+
+            return return_str
+        else:
+            return self.glossary.get('others') + ': OK'

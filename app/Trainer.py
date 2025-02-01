@@ -1,7 +1,7 @@
-import json
 import pandas as pd
 import xgboost as xgb
 from sklearn.metrics import accuracy_score, recall_score, precision_score, cohen_kappa_score, fbeta_score
+import FileHandler
 from DataParser import DataParser
 from Glossary import Glossary
 from ProgressLogger import ProgressLogger
@@ -134,6 +134,4 @@ class Trainer:
         }
         model_details['hyperparameters'] = self.hyperparameters
         # Save
-        with open(path + 'model_details.json', 'w') as f:
-            json.dump(model_details, f, indent=4)
-        f.close()
+        FileHandler.save_as_json(model_details, path + 'model_details.json')

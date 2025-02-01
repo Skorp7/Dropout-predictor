@@ -1,6 +1,7 @@
 import pandas as pd
 from scripts.parse_students import parse_students
 from scripts.cut_and_prepare_data import cut_data
+import FileHandler
 from Glossary import Glossary
 from ProgressLogger import ProgressLogger
 
@@ -51,7 +52,7 @@ class DataParser:
             year_file = path + str(year) + '_processed.csv'
 
             # Combine this year's data into the combined dataframe using the first row of csv as header
-            df_year     = pd.read_csv(year_file, delimiter=',')
+            df_year     = FileHandler.read_csv_to_dataframe(year_file, ',')
             df_combined = pd.concat([df_combined, df_year], ignore_index=True)
 
         # Save the combined data

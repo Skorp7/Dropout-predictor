@@ -1,5 +1,4 @@
 import sys
-import time
 
 class ProgressLogger:
     def __init__(self, total, bar_width = 50):
