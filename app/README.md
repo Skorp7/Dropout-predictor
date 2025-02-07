@@ -24,7 +24,7 @@ Ilmoittautumisaineisto on kolmas aineisto eikä se ole pakollinen jos sitä ei h
 Aineistot annetaan siten, että jokaista vuotta kohden on 2-3 tiedostoa (esim. 2022_students.csv, 2022_credits.csv ja 2022_enrollments.csv).
 Vuosi tarkoittaa tässä tapauksessa tuona vuonna opinto-oikeuden saaneita opiskelijoita.
 
-Vuonna 2022 aloittaneiden opiskelijoiden kaikki suoritustiedot 2022 alkaen 2025 tammikuuhun asti ovat siis tiedostossa 2022_credits.csv jos aineisto luotaisiin tammikuussa 2025.
+Esimerkki: Vuonna 2022 aloittaneiden opiskelijoiden kurssisuoritustiedot 2022 alkaen 2025 tammikuuhun asti ovat siis tiedostossa 2022_credits.csv jos aineisto luotaisiin tammikuussa 2025.
 
 Kansioissa ```data_in/predicting/samples/``` ja ```data_in/training/samples/``` on esimerkkitiedostot kuvitteellisesti 2023 aloittaneista opiskelijoista.
 
