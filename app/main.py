@@ -284,6 +284,7 @@ def check_for_quitting(input: str, printer: TerminalPrinter):
 def main():
     printer = None
     try:
+        TerminalPrinter.clear()
         lang_code = get_lang()
         glossary = Glossary(lang_code)
 
