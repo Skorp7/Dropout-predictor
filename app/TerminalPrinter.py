@@ -10,7 +10,8 @@ class TerminalPrinter:
         init(autoreset=True)
         self.glossary = glossary
 
-    def clear(self):
+    @staticmethod
+    def clear():
         os.system('cls' if os.name == 'nt' else 'clear')
 
     def empty_line(self, count: int = 1):
