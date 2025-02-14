@@ -3,7 +3,7 @@
     "beta_value_info": "Jos beta on suurempi kuin 1, herkkyyttä (engl. recall) painotetaan hyperparametrien optimoinnissa. Jos beta on pienempi kuin 1, täsmällisyyttä (engl. precision) painotetaan. Sallitut arvot: 0.1-10.0. Tai paina ENTER valitaksesi oletusarvon (1.6)",
     "data_end_year": "Vuosi (aineiston opiskelijoiden aloitusvuosi), johon aineistot päättyvät (VVVV). Paina ENTER, jos aineistoa on vain yhtenä vuonna aloittaneista.",
     "data_start_year": "Vuosi (aineiston opiskelijoiden aloitusvuosi), josta aineistot alkavat (VVVV)",
-    "data_pred_year": "Vuosi (aineiston opiskelijoiden aloitusvuosi) (VVVV)",
+    "data_pred_year": "Anna ennustettavan aineiston opiskelijoiden aloitusvuosi tiedostojen kohdistamista varten (VVVV)",
     "data_parsed": "Aineisto valmisteltu",
     "description": "Tämä on sovellus, joka ennustaa, onko opiskelija vaarassa keskeyttää yliopisto-opintonsa.\nEnnustaminen perustuu kurssiaineistoon ja opiskelijan taustatietoihin.\nMalli on esikoulutettu ennustamaan pudokkuutta 1.5 vuoden kurssiaineiston perusteella.",
     "enroll_data": "Onko ilmoittautumisaineistot mukana? Ei mahdollista ennen vuotta 2020. (y/n)",

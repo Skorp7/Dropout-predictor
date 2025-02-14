@@ -3,7 +3,7 @@
     "beta_value_info": "If beta is higher than 1, recall is weighted in hyperparameter tuning. If beta is lower than 1, precision is weighted. Valid values: 0.1-10.0. Or press ENTER to select default (1.6)",
     "data_end_year": "Insert data end year. The year when the students started their studies. (YYYY) Press ENTER if you have data only from students who started in one year.",
     "data_start_year": "Insert data start year. The year when the students started their studies. (YYYY)",
-    "data_pred_year": "Insert data prediction year. The year when the students started their studies. (YYYY)",
+    "data_pred_year": "Insert the year for prediction data. The year when the students started their studies. (YYYY)",
     "data_parsed": "Data parsed",
     "description": "This is an application that predicts if a student is likely to drop out of the university.\nPrediction is done by course data and some information of the student. \nThe model is pre-trained to predict dropout based on 1.5 years of course data.",
     "enroll_data": "Is enrolling data included? Not possible before 2020. (y/n)",
