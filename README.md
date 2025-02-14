@@ -79,4 +79,4 @@ Mallin uudelleenkouluttaminen tulee tarpeelliseksi, jos halutaan käyttää eri 
 
 Mallin koulutus tapahtuu valitsemalla ohjelmassa "T". Ohjelma kysyy parametrit, joita halutaan käyttää. Lisää aineistot ```data_in/training/``` kansioon ja käynnistä koulutus.
 
-![Käyttöliittymä](pictures/ui.png)
+![Käyttöliittymä](app/pictures/ui.png)
