@@ -14,9 +14,9 @@ Ensimmäinen rivi luo ympäristön, toinen käynnistää sen. Voit sammuuttaa ym
 
 ### Docker
 
-Rakenna Docker-kontti komennolla:
+Rakenna ja käynnistä Docker-kontti komennolla:
 ```
-docker compose up -d --build
+docker compose run --rm --build app
 ```
 
 ## Ohjelman käynnistäminen
@@ -29,8 +29,9 @@ python3 main.py
 ```
 
 ### Docker
+Ohjelma käynnistyi jo konttia rakentaessa. Jos sammutit kontin, voit käynnistää sen uudelleen:
 ```
-docker compose run app
+docker compose run --rm app
 ```
 
 ## Teknisten vaatimusten tarkistaminen
