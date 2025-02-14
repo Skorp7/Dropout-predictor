@@ -75,7 +75,7 @@ Käyttääksesi valmista mallia, käynnistä ohjelma ylläolevan ohjeen mukaises
 
 ## Uudelleen kouluttaminen
 
-Mallin uudelleenkouluttaminen tulee tarpeelliseksi, jos halutaan käyttää eri parametrejä kuin valmismallissa on käytetty. Uudelleenkoulutus on myös aiheellista kun nykyinen aineisto alkaa olla vanhentunutta.
+Mallin uudelleenkouluttaminen tulee tarpeelliseksi, jos halutaan käyttää eri parametrejä kuin valmismallissa on käytetty. Uudelleenkoulutus on myös aiheellista kun nykyinen aineisto alkaa olla vanhentunutta. Esimerkiksi jos opiskelijoiden kurssikäyttäytyminen, ei-valmistuvien osuus, kurssien läpäisyaste tai arviointi muuttuu rajusti.
 
 Mallin koulutus tapahtuu valitsemalla ohjelmassa "T". Ohjelma kysyy parametrit, joita halutaan käyttää. Lisää aineistot ```data_in/training/``` kansioon ja käynnistä koulutus.
 
