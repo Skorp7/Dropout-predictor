@@ -2,6 +2,9 @@
 
 ## Tekniset vaatimukset
 
+Ohjelmisto tarvitsee toimiakseen pyhon-ympäristön, jossa on tietyt kirjastot asennettuna. Tämän voit luoda esim. condalla tai Dockerilla. Alla ohjeet molempiin.
+
+### Conda
 Luo python-ympäristö, jossa on environment.yaml -tiedoston osoittamat kirjastot asennettuna. Esim. condalla: 
 ```
 conda env create -f environment.yaml
@@ -9,7 +12,28 @@ conda activate dropout-env
 ```
 Ensimmäinen rivi luo ympäristön, toinen käynnistää sen. Voit sammuuttaa ympäristön ```conda deactivate```.
 
-### Teknisten vaatimusten tarkistaminen
+### Docker
+
+Rakenna Docker-kontti komennolla:
+```
+docker compose up -d --build
+```
+
+## Ohjelman käynnistäminen
+
+### Conda
+Aja terminaalissa:
+```
+conda activate dropout-env
+python3 main.py
+```
+
+### Docker
+```
+docker compose run app
+```
+
+## Teknisten vaatimusten tarkistaminen
 
 Voit tarkistaa kahdella tavalla, onko kaikki tarpeellinen asennettuna.
 1. [Käynnistä ohjelma](#ohjelman-käynnistäminen) ja valitse "V", eli testaa ympäristö.
@@ -58,13 +82,6 @@ opisknro;lukukausi;ilm-pvm;kurssi
 a123;138;2018-11-01;TKT10001
 a123;143;2019-03-01;TKT20001
 b124;138;2018-11-01;TKT10001
-```
-
-## Ohjelman käynnistäminen
-Aja terminaalissa:
-```
-conda activate dropout-env
-python3 main.py
 ```
 
 ## Ennustaminen
