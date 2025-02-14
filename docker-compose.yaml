@@ -1,0 +1,8 @@
+services:
+  app:
+    build: .
+    volumes:
+      - ./app:/app
+    stdin_open: true # Keep the standard input open for interaction
+    tty: true # Allocate a pseudo-TTY
+    command: python3 main.py
