@@ -112,6 +112,9 @@ Jos sinulle on toimitettu esikoulutettu malli, voit tehdä ennusteita ilman koul
 
 Ennustusten tulokset tulee tiedostoon ```data_out/predictions.csv```. Tiedostossa kunkin opiskelijanumeron kohdalla on ennusteen tulos 1 (pudokas) tai 0 (ei-pudokas).
 
+Esimerkki ennustamisen käyttöliittymästä:
+![Käyttöliittymä](app/pictures/ui_pred.png)
+
 ## Uudelleen kouluttaminen
 
 Mallin uudelleenkouluttaminen tulee tarpeelliseksi, jos halutaan käyttää eri parametrejä kuin valmismallissa on käytetty. Uudelleenkoulutus on myös aiheellista kun nykyinen aineisto alkaa olla vanhentunutta. Esimerkiksi jos opiskelijoiden kurssikäyttäytyminen, ei-valmistuvien osuus, kurssien läpäisyaste tai arviointi muuttuu rajusti.
@@ -120,4 +123,5 @@ Koulutusaineiston tulee olla riittävän laaja: kerää aineistoa vähintään 8
 
 Mallin koulutus tapahtuu valitsemalla ohjelmassa "T". Ohjelma kysyy parametrit, joita halutaan käyttää. Lisää aineistot ```data_in/training/``` kansioon ja käynnistä koulutus.
 
+Esimerkki kouluttamisen käyttöliittymästä:
 ![Käyttöliittymä](app/pictures/ui.png)
