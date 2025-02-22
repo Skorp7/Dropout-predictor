@@ -51,6 +51,14 @@ def ask_for_action(printer: TerminalPrinter, glossary: Glossary):
                 printer.saved(str(prediction_epoch))
                 beta_value = ask_for_beta_value(printer, glossary)
                 printer.saved(str(beta_value))
+                printer.yellow(glossary.get('training_files'))
+                file_list = Trainer.required_files_info(data_start_year, data_end_year, enroll_data)
+                for file in file_list:
+                    printer.yellow(file)
+                printer.empty_line()
+                printer.yellow(glossary.get('press_enter_to_continue'))
+                answer = input('>')
+                check_for_quitting(answer, printer)
                 printer.print(glossary.get('training_in_progress') + '... (' + glossary.get('interrupt_by') + ' Ctrl + C)')
                 try:
                     logger   = ProgressLogger(10 + Trainer.TRIALS)

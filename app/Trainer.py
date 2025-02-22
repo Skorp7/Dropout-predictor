@@ -26,6 +26,18 @@ class Trainer:
         self.hyperparameters  = None
         self.logger           = logger
 
+    @staticmethod
+    def required_files_info(start_year: int, end_year: int, include_enrolls: bool):
+        years    = range(start_year, end_year + 1)
+        filelist = []
+        for year in years:
+            filelist.append(str(year) + '_students.csv')
+            filelist.append(str(year) + '_credits.csv')
+            if (include_enrolls):
+                filelist.append(str(year) + '_enrollments.csv')
+
+        return filelist
+
     def parse_data(self, file_prefix: str|None = None):
         self.logger.update()
 
